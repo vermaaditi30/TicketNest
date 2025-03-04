@@ -1,7 +1,6 @@
 const { GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLInt, GraphQLList } = require("graphql");
 const mongoose = require("mongoose");
 
-// Define Mongoose model
 const Ticket = mongoose.model("Ticket", new mongoose.Schema({
     name: String,
     gender: String,
@@ -10,7 +9,6 @@ const Ticket = mongoose.model("Ticket", new mongoose.Schema({
     destination: String
 }));
 
-// GraphQL Types
 const TicketType = new GraphQLObjectType({
     name: "Ticket",
     fields: () => ({
@@ -23,7 +21,6 @@ const TicketType = new GraphQLObjectType({
     })
 });
 
-// Root Query
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
@@ -36,7 +33,6 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
-// Mutation (Create Ticket)
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
@@ -52,6 +48,29 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args) {
                 const newTicket = new Ticket(args);
                 return newTicket.save();
+            }
+        },
+        updateTicket: {
+            type: TicketType,
+            args: {
+                id: { type: GraphQLString },
+                name: { type: GraphQLString },
+                gender: { type: GraphQLString },
+                age: { type: GraphQLInt },
+                from: { type: GraphQLString },
+                destination: { type: GraphQLString }
+            },
+            async resolve(parent, args) {
+                return await Ticket.findByIdAndUpdate(args.id, args, { new: true });
+            }
+        },
+        deleteTicket: {
+            type: TicketType,
+            args: {
+                id: { type: GraphQLString }
+            },
+            async resolve(parent, args) {
+                return await Ticket.findByIdAndDelete(args.id);
             }
         }
     }

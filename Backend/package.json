@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "vercel-start": "node index.js"
+
   },
   "keywords": ["travel", "booking", "graphql", "mongodb", "express"],
   "author": "Your Name",
